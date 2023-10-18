@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: renan-dep
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webserver
+  template:
+    metadata:
+      name: renan-pod
+      labels:
+        app: webserver
+    spec:
+      containers:
+        - name: renan-ctr
+          image: nginx
+          ports:
+            - containerPort: 80
