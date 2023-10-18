@@ -1,0 +1,43 @@
+version: '3'
+
+services: 
+  ctr-db:
+    image: mysql:5.7
+    volumes:
+      - db-vol:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: devopscloud
+      MYSQL_PASSWORD: devopscloud
+    networks:
+      - wp-net
+    restart: always
+
+  ctr-wp:
+    image: wordpress:latest
+    ports:
+      - "3000:80"
+    environment:
+      WORDPRESS_DB_HOST: ctr-db:3306
+      WORDPRESS_DB_USER: devopscloud
+      WORDPRESS_DB_PASSWORD: devopscloud
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - wp-net
+    restart: always
+    depends_on:
+      - ctr-db
+
+  py-websever:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:7000"
+    restart: always
+
+volumes:
+  db-vol: {}
+networks:
+  wp-net: {}
